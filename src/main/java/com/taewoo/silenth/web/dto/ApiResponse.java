@@ -23,12 +23,12 @@ public class ApiResponse<T> {
     }
 
     // 성공 응답 -> 데이터 포함
-    public static <T> ApiResponse<T> onSuccess(T data) {
+    public static <T> ApiResponse<T> onSuccessWithData(T data) {
         return new ApiResponse<>("SUCCESS", data, null);
     }
 
     // 성공 응답 -> 데이터 미포함, 메세지만
-    public static ApiResponse<Void> onSuccess(String message) {
+    public static ApiResponse<Void> onSuccessWithMessage(String message) {
         return new ApiResponse<>("SUCCESS", null, message);
     }
 

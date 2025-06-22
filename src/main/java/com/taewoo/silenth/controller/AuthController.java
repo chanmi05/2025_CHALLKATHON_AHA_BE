@@ -23,24 +23,24 @@ public class AuthController {
         authService.signUp(signUpRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ApiResponse.onSuccess("회원가입이 성공적으로 완료되었습니다."));
+                .body(ApiResponse.onSuccessWithMessage("회원가입이 성공적으로 완료되었습니다."));
     }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<TokenResponse>> login(@Valid  @RequestBody LoginRequest loginRequest) {
         TokenResponse token = authService.login(loginRequest);
-        return ResponseEntity.ok(ApiResponse.onSuccess(token));
+        return ResponseEntity.ok(ApiResponse.onSuccessWithData(token));
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<TokenResponse>> refreshToken(@Valid @RequestBody TokenRefreshRequest tokenRefreshRequest) {
         TokenResponse newTokens = authService.refreshToken(tokenRefreshRequest.refreshToken());
-        return ResponseEntity.ok(ApiResponse.onSuccess(newTokens));
+        return ResponseEntity.ok(ApiResponse.onSuccessWithData(newTokens));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<Void>> logout(@Valid @RequestBody TokenRefreshRequest tokenRefreshRequest) {
         authService.logout(tokenRefreshRequest.refreshToken());
-        return ResponseEntity.ok(ApiResponse.onSuccess("로그아웃이 성공적으로 완료되었습니다."));
+        return ResponseEntity.ok(ApiResponse.onSuccessWithMessage("로그아웃이 성공적으로 완료되었습니다."));
     }
 }

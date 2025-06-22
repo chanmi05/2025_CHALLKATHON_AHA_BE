@@ -40,6 +40,8 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     private LocalDateTime deletedAt;
 
+    private String profileImageUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
@@ -50,7 +52,19 @@ public class User extends BaseTimeEntity implements UserDetails {
         this.password = password;
         this.username = username;
         this.role = role;
+        this.profileImageUrl = "default_image_url";
     }
+
+    public void updateUsername(String newUsername) {
+        this.username = newUsername;
+    }
+
+    public void updateProfilePicture(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private RefreshToken refreshToken;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -64,7 +78,7 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.username;
+        return this.email;
     }
 
     @Override
