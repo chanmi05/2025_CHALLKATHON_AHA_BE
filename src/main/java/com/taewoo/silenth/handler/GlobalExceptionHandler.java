@@ -11,6 +11,7 @@ import com.taewoo.silenth.web.dto.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.View;
 
 @Slf4j
@@ -31,6 +32,16 @@ public class GlobalExceptionHandler {
                 errorCode.getCode(), errorCode.getMessage()
         );
 
+        return ResponseEntity.status(errorCode.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    protected ResponseEntity<ApiResponse<ErrorResponse>> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+        log.error("handleMaxUploadSizeExceededException", e);
+        final ErrorCode errorCode = ErrorCode.FILE_SIZE_EXCEEDED;
+        final ApiResponse<ErrorResponse> response = ApiResponse.onFailure(
+                errorCode.getCode(), errorCode.getMessage()
+        );
         return ResponseEntity.status(errorCode.getStatus()).body(response);
     }
 
