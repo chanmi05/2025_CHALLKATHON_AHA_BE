@@ -12,17 +12,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import org.springframework.web.servlet.View;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    private final View error;
-
-    public GlobalExceptionHandler(View error) {
-        this.error = error;
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ApiResponse<ErrorResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
