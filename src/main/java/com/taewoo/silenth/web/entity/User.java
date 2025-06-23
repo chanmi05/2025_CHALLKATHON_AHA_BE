@@ -63,9 +63,6 @@ public class User extends BaseTimeEntity implements UserDetails {
         this.profileImageUrl = profileImageUrl;
     }
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private RefreshToken refreshToken;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(this.role.getKey()));
