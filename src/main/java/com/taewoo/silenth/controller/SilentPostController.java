@@ -1,12 +1,15 @@
 package com.taewoo.silenth.controller;
 
 import com.taewoo.silenth.web.dto.ErrorResponse;
+import com.taewoo.silenth.web.dto.PostResponse;
 import com.taewoo.silenth.web.dto.SilentPostCreateRequest;
 import com.taewoo.silenth.web.dto.SilentPostCreateResponse;
 import com.taewoo.silenth.service.SilentPostService;
 import com.taewoo.silenth.web.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -48,5 +51,12 @@ public class SilentPostController {
         User loginUer = (User) authentication.getPrincipal();
         SilentPostCreateResponse response = silentPostService.createPost(loginUer.getId(), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(com.taewoo.silenth.web.dto.ApiResponse.onSuccessWithData(response));
+    }
+
+    @GetMapping
+    @Operation(summary = "감정 기록 조회", description = "감정 기록들을 최신 순으로 조회")
+    public ResponseEntity<com.taewoo.silenth.web.dto.ApiResponse<Page<PostResponse>>> getPostFeed(Pageable pageable) {
+        Page<PostResponse> feed = silentPostService.getPostFeed(pageable);
+        return ResponseEntity.ok(com.taewoo.silenth.web.dto.ApiResponse.onSuccessWithData(feed));
     }
 }
