@@ -1,4 +1,4 @@
-package com.taewoo.silenth.service;
+package com.taewoo.silenth.service.auth;
 
 import com.taewoo.silenth.common.ErrorCode;
 import com.taewoo.silenth.common.Role;

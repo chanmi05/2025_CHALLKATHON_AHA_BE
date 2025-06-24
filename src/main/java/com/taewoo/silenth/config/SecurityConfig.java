@@ -4,6 +4,8 @@ import com.taewoo.silenth.config.jwt.JwtAuthenticationFilter;
 import com.taewoo.silenth.config.jwt.JwtProperties;
 import com.taewoo.silenth.config.jwt.JwtProvider;
 import com.taewoo.silenth.service.CustomUserDetailService;
+import com.taewoo.silenth.service.auth.CustomOAuth2UserService;
+import com.taewoo.silenth.service.auth.OAuth2LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +30,7 @@ public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
     private final CustomUserDetailService userDetailService;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
     // 허용할 URL 목록
     private static final String[] PERMIT_URL_ARRAY = {
@@ -48,7 +51,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomOAuth2UserService customOAuth2UserService) throws Exception {
         http
                 // 기본 설정 비활성화
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -65,7 +68,14 @@ public class SecurityConfig {
                 )
 
                 // JWT 필터 추가
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, userDetailService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, userDetailService), UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(oAuth2LoginSuccessHandler)
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService)
+                        )
+                );
+
 
         return http.build();
     }
