@@ -3,7 +3,6 @@ package com.taewoo.silenth.service;
 import com.taewoo.silenth.common.ErrorCode;
 import com.taewoo.silenth.exception.BusinessException;
 import com.taewoo.silenth.repository.UserRepository;
-import com.taewoo.silenth.web.dto.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

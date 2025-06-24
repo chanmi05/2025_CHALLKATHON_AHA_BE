@@ -1,6 +1,6 @@
 package com.taewoo.silenth.config.jwt;
 
-import com.taewoo.silenth.web.dto.TokenResponse;
+import com.taewoo.silenth.web.dto.authDto.TokenResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

@@ -1,8 +1,8 @@
-package com.taewoo.silenth.service;
+package com.taewoo.silenth.service.postService;
 
-import com.taewoo.silenth.web.dto.PostResponse;
-import com.taewoo.silenth.web.dto.SilentPostCreateRequest;
-import com.taewoo.silenth.web.dto.SilentPostCreateResponse;
+import com.taewoo.silenth.web.dto.postDto.PostResponse;
+import com.taewoo.silenth.web.dto.postDto.SilentPostCreateRequest;
+import com.taewoo.silenth.web.dto.postDto.SilentPostCreateResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

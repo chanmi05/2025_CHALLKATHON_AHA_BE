@@ -1,4 +1,4 @@
-package com.taewoo.silenth.web.dto;
+package com.taewoo.silenth.web.dto.commonResponse;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;

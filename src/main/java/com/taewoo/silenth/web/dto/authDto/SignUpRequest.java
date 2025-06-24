@@ -1,4 +1,4 @@
-package com.taewoo.silenth.web.dto;
+package com.taewoo.silenth.web.dto.authDto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;

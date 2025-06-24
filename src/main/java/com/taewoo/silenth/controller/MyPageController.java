@@ -1,9 +1,9 @@
 package com.taewoo.silenth.controller;
 
 import com.taewoo.silenth.service.MyPageService;
-import com.taewoo.silenth.web.dto.ApiResponse;
-import com.taewoo.silenth.web.dto.MyPageResponse;
-import com.taewoo.silenth.web.dto.NicknameUpdateRequest;
+import com.taewoo.silenth.web.dto.commonResponse.ApiResponse;
+import com.taewoo.silenth.web.dto.mypageDto.MyPageResponse;
+import com.taewoo.silenth.web.dto.mypageDto.NicknameUpdateRequest;
 import com.taewoo.silenth.web.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

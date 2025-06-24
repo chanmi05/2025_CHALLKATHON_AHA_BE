@@ -1,8 +1,7 @@
 package com.taewoo.silenth.converter;
 
-import com.taewoo.silenth.web.dto.SilentPostCreateResponse;
+import com.taewoo.silenth.web.dto.postDto.SilentPostCreateResponse;
 import com.taewoo.silenth.web.entity.SilentPost;
-import com.taewoo.silenth.web.entity.EmotionTag;
 
 import java.util.List;
 

@@ -1,7 +1,11 @@
 package com.taewoo.silenth.controller;
 
 import com.taewoo.silenth.service.AuthService;
-import com.taewoo.silenth.web.dto.*;
+import com.taewoo.silenth.web.dto.authDto.LoginRequest;
+import com.taewoo.silenth.web.dto.authDto.SignUpRequest;
+import com.taewoo.silenth.web.dto.authDto.TokenRefreshRequest;
+import com.taewoo.silenth.web.dto.authDto.TokenResponse;
+import com.taewoo.silenth.web.dto.commonResponse.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

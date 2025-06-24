@@ -1,6 +1,5 @@
-package com.taewoo.silenth.web.dto;
+package com.taewoo.silenth.web.dto.postDto;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;

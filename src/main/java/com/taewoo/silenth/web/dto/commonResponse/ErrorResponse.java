@@ -1,4 +1,4 @@
-package com.taewoo.silenth.web.dto;
+package com.taewoo.silenth.web.dto.commonResponse;
 
 import java.time.LocalDateTime;
 

@@ -1,11 +1,8 @@
-package com.taewoo.silenth.web.dto;
+package com.taewoo.silenth.web.dto.postDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Builder
