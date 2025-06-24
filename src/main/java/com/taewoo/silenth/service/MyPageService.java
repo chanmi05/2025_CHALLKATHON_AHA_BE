@@ -26,19 +26,19 @@ public class MyPageService {
         return new MyPageResponse(user);
     }
 
-    public void updateUsername(Long userId, String newUsername) {
+    public void updateNickname(Long userId, String newNickname) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-        if (user.getUsername().equals(newUsername)) {
-            throw new BusinessException(ErrorCode.SAME_USERNAME);
+        if (user.getNickname().equals(newNickname)) {
+            throw new BusinessException(ErrorCode.SAME_NICKNAME);
         }
 
-        if (userRepository.existsByUsername(newUsername)) {
-            throw new BusinessException(ErrorCode.USERNAME_ALREADY_EXISTS);
+        if (userRepository.existsByNickname(newNickname)) {
+            throw new BusinessException(ErrorCode.NICKNAME_ALREADY_EXISTS);
         }
 
-        user.updateUsername(newUsername);
+        user.updateNickname(newNickname);
     }
 
     public String updateProfileImage(Long userId, MultipartFile profileImage) throws IOException {

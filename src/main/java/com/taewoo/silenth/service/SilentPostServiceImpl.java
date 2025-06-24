@@ -32,7 +32,7 @@ public class SilentPostServiceImpl implements SilentPostService {
 
         // 2. 감정 태그 유효성 검사
         if (request.getEmotionTagIds() == null || request.getEmotionTagIds().isEmpty()){
-           throw new BusinessException(ErrorCode.EMPTY_EMOTION_TAGS);
+            throw new BusinessException(ErrorCode.EMPTY_EMOTION_TAGS);
         }
 
         // 3. 감정 태그 조회

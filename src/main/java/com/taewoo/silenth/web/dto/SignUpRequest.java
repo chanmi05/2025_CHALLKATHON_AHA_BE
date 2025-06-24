@@ -19,5 +19,5 @@ public record SignUpRequest(
 
         @NotBlank(message = "사용자 이름은 필수입니다.")
         @Size(min = 2, max = 10, message = "사용자 이름은 2글자 이상, 10글자 이하로 입력해주세요.")
-        String username
+        String nickname
 ){ }
