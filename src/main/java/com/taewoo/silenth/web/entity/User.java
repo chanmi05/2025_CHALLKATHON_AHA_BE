@@ -35,8 +35,11 @@ public class User extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 20)
     private String nickname;
+
+    @Column(nullable = false, unique = true, length = 20)
+    private String loginId;
 
     private LocalDateTime deletedAt;
 
@@ -47,8 +50,9 @@ public class User extends BaseTimeEntity implements UserDetails {
     private Role role;
 
     @Builder
-    public User(String email, String password, String nickname, Role role) {
+    public User(String email, String password, String loginId, String nickname, Role role) {
         this.email = email;
+        this.loginId = loginId;
         this.password = password;
         this.nickname = nickname;
         this.role = role;
@@ -75,7 +79,7 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.loginId;
     }
 
     @Override

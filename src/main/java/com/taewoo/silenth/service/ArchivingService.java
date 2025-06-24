@@ -2,13 +2,10 @@ package com.taewoo.silenth.service;
 
 import com.taewoo.silenth.repository.CollectiveEntryRepository;
 import com.taewoo.silenth.repository.SilentPostRepository;
-import com.taewoo.silenth.web.dto.CollectiveEntryResponse;
 import com.taewoo.silenth.web.entity.CollectiveEntry;
 import com.taewoo.silenth.web.entity.SilentPost;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,11 +43,5 @@ public class ArchivingService {
         collectiveEntryRepository.saveAll(collectiveEntries);
 
         postsToArchive.forEach(SilentPost::archive);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<CollectiveEntryResponse> getArchivedPostsByYear(int year, Pageable pageable) {
-        return collectiveEntryRepository.findByEraYear(year, pageable)
-                .map(CollectiveEntryResponse::new);
     }
 }

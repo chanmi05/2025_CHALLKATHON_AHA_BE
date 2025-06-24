@@ -1,5 +1,6 @@
 package com.taewoo.silenth.web.entity;
 
+import com.taewoo.silenth.common.TimeSlot;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -32,6 +33,10 @@ public class CollectiveEntry {
     @Column(nullable = false)
     private LocalDateTime originalCreatedAt;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TimeSlot timeSlot;
+
     @Builder
     public CollectiveEntry(SilentPost originalPost) {
         this.originalPost = originalPost;
@@ -39,5 +44,6 @@ public class CollectiveEntry {
         this.originalCreatedAt = originalPost.getCreatedAt();
         this.eraYear = originalPost.getCreatedAt().getYear();
         this.eraMonth = originalPost.getCreatedAt().getMonthValue();
+        this.timeSlot = TimeSlot.Eof(originalPost.getCreatedAt().toLocalTime());
     }
 }
