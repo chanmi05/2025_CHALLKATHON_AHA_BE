@@ -1,5 +1,6 @@
 package com.taewoo.silenth.controller;
 
+import com.taewoo.silenth.config.UserPrincipal;
 import com.taewoo.silenth.service.MyPageService;
 import com.taewoo.silenth.web.dto.commonResponse.ApiResponse;
 import com.taewoo.silenth.web.dto.mypageDto.MyPageResponse;
@@ -23,26 +24,28 @@ public class MyPageController {
     private final MyPageService myPageService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<MyPageResponse>> getMyPageInfo(@AuthenticationPrincipal User user) {
-        MyPageResponse myPageInfo = myPageService.getMyPageInfo(user);
+    public ResponseEntity<ApiResponse<MyPageResponse>> getMyPageInfo(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        MyPageResponse myPageInfo = myPageService.getMyPageInfo(userPrincipal.getUser());
         return ResponseEntity.ok(ApiResponse.onSuccessWithData(myPageInfo));
     }
 
     @PatchMapping("/username")
-    public ResponseEntity<ApiResponse<Void>> updateUsername(
-            @AuthenticationPrincipal User user,
+    public ResponseEntity<ApiResponse<Void>> updateNickname(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody NicknameUpdateRequest request
     ) {
-        myPageService.updateNickname(user.getId(), request.getNickname());
+        User loginUser = userPrincipal.getUser();
+        myPageService.updateNickname(loginUser.getId(), request.getNickname());
         return ResponseEntity.ok(ApiResponse.onSuccessWithMessage("닉네임이 성공적으로 변경되었습니다."));
     }
 
     @PostMapping(value = "/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<String>> updateProfileImage(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart("image") MultipartFile profileImage
     ) throws IOException {
-        String profileImageUrl = myPageService.updateProfileImage(user.getId(), profileImage);
+        User loginUser = userPrincipal.getUser();
+        String profileImageUrl = myPageService.updateProfileImage(loginUser.getId(), profileImage);
         return ResponseEntity.ok(ApiResponse.onSuccessWithData(profileImageUrl));
     }
 }

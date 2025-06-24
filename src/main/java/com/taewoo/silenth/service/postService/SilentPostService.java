@@ -9,4 +9,5 @@ import org.springframework.data.domain.Pageable;
 public interface SilentPostService {
     SilentPostCreateResponse createPost(Long userId, SilentPostCreateRequest request);
     Page<PostResponse> getPostFeed(Pageable pageable);
+    void giveArchivingConsent(Long userId, Long postId);
 }

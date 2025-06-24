@@ -2,6 +2,7 @@ package com.taewoo.silenth.service;
 
 import com.taewoo.silenth.common.ErrorCode;
 import com.taewoo.silenth.common.Role;
+import com.taewoo.silenth.config.UserPrincipal;
 import com.taewoo.silenth.config.jwt.JwtProvider;
 import com.taewoo.silenth.exception.BusinessException;
 import com.taewoo.silenth.repository.RefreshTokenRepository;
@@ -58,7 +59,8 @@ public class AuthService {
         TokenResponse tokenResponse = jwtProvider.generateToken(authentication);
 
         // Refresh Token DB에 저장
-        User user = (User) authentication.getPrincipal();
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        User user = userPrincipal.getUser();
         refreshTokenRepository.findByUserId(user.getId())
                 .ifPresentOrElse(
                         refreshToken -> refreshToken.updateToken(tokenResponse.refreshToken()),
