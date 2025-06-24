@@ -1,8 +1,10 @@
 package com.taewoo.silenth.service;
 
 import com.taewoo.silenth.common.ErrorCode;
+import com.taewoo.silenth.config.UserPrincipal;
 import com.taewoo.silenth.exception.BusinessException;
 import com.taewoo.silenth.repository.UserRepository;
+import com.taewoo.silenth.web.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +21,9 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        return new UserPrincipal(user);
     }
 }

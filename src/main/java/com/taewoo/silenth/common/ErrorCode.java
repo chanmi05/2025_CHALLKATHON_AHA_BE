@@ -28,7 +28,6 @@ public enum ErrorCode {
     ALREADY_ARCHIVED(HttpStatus.CONFLICT, "P004", "이미 아카이빙된 게시글입니다."),
     UNAUTHORIZED_POST_ACCESS(HttpStatus.UNAUTHORIZED, "P005", "해당 게시글에 대한 권한이 없습니다.");
 
-
     private final HttpStatus status;
     private final String code;
     private final String message;

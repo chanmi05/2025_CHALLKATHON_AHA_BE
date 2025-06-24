@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public interface SilentPostRepository extends JpaRepository<SilentPost, Long> {
     // N + 1 문제 방지용 쿼리
     @Query("select p from SilentPost p join fetch p.user order by p.createdAt desc ")
@@ -14,4 +17,7 @@ public interface SilentPostRepository extends JpaRepository<SilentPost, Long> {
 
     @Query("SELECT COUNT(e) FROM Echo e WHERE e.silentPost.id = :postId")
     int countEchosByPostId(@Param("postId") Long postId);
+
+    // 아직 아카이빙 되지 않은 게시글 조회 (특정 시간 이전)
+    List<SilentPost> findByArchivedFalseAndCreatedAtBefore(LocalDateTime threshold);
 }
