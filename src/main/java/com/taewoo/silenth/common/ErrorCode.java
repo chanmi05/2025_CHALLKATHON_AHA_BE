@@ -19,7 +19,15 @@ public enum ErrorCode {
     SAME_USERNAME(HttpStatus.CONFLICT, "U005", "현재 닉네임과 동일합니다."),
 
     // File
-    FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "F001", "파일 크기가 5MB를 초과할 수 없습니다.");
+    FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "F001", "파일 크기가 5MB를 초과할 수 없습니다."),
+
+    // SilentPost
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "해당 게시글을 찾을 수 없습니다."),
+    EMPTY_EMOTION_TAGS(HttpStatus.BAD_REQUEST, "P002", "감정 태그는 최소 1개 이상이어야 합니다."),
+    CONTENT_TOO_LONG(HttpStatus.BAD_REQUEST, "P003", "내용이 너무 깁니다."),
+    ALREADY_ARCHIVED(HttpStatus.CONFLICT, "P004", "이미 아카이빙된 게시글입니다."),
+    UNAUTHORIZED_POST_ACCESS(HttpStatus.UNAUTHORIZED, "P005", "해당 게시글에 대한 권한이 없습니다.");
+
 
     private final HttpStatus status;
     private final String code;
