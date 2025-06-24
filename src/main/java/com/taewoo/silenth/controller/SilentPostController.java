@@ -1,5 +1,6 @@
 package com.taewoo.silenth.controller;
 
+import com.taewoo.silenth.config.UserPrincipal;
 import com.taewoo.silenth.web.dto.commonResponse.ErrorResponse;
 import com.taewoo.silenth.web.dto.postDto.PostResponse;
 import com.taewoo.silenth.web.dto.postDto.SilentPostCreateRequest;
@@ -12,7 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,12 +45,12 @@ public class SilentPostController {
     )
     public ResponseEntity<com.taewoo.silenth.web.dto.commonResponse.ApiResponse<SilentPostCreateResponse>> createPost(
             @RequestBody @Valid SilentPostCreateRequest request,
-            Authentication authentication
-    ) {
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+            ) {
         log.info("요청 본문: {}", request);
 
-        User loginUer = (User) authentication.getPrincipal();
-        SilentPostCreateResponse response = silentPostService.createPost(loginUer.getId(), request);
+        User loginUser = userPrincipal.getUser();
+        SilentPostCreateResponse response = silentPostService.createPost(loginUser.getId(), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(com.taewoo.silenth.web.dto.commonResponse.ApiResponse.onSuccessWithData(response));
     }
 
