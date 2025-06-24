@@ -34,14 +34,14 @@ public class AuthService {
         if (userRepository.existsByEmail(req.email())) {
             throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
-        if (userRepository.existsByUsername(req.username())) {
-            throw new BusinessException(ErrorCode.USERNAME_ALREADY_EXISTS);
+        if (userRepository.existsByNickname(req.nickname())) {
+            throw new BusinessException(ErrorCode.NICKNAME_ALREADY_EXISTS);
         }
 
         User user = User.builder()
                 .email(req.email())
                 .password(passwordEncoder.encode(req.password()))
-                .username(req.username())
+                .nickname(req.nickname())
                 .role(Role.USER)
                 .build();
 

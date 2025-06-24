@@ -6,12 +6,12 @@ import lombok.Getter;
 @Getter
 public class MyPageResponse {
     private final String email;
-    private final String username;
+    private final String nickname;
     private final String profileImageUrl;
 
     public MyPageResponse(User user) {
         this.email = user.getEmail();
-        this.username = user.getUsername();
+        this.nickname = user.getNickname();
         this.profileImageUrl = user.getProfileImageUrl();
     }
 }
