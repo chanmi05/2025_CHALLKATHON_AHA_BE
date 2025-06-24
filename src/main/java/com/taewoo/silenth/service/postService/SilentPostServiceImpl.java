@@ -51,6 +51,10 @@ public class SilentPostServiceImpl implements SilentPostService {
         post.setEmotionTags(emotionTags);
         post.setContent(request.getContent());
 
+        if (request.getIsAnonymous() != null) {
+            post.setAnonymous(request.getIsAnonymous());
+        }
+
         SilentPost saved = silentPostRepository.save(post);
 
         // 5. response 변환
