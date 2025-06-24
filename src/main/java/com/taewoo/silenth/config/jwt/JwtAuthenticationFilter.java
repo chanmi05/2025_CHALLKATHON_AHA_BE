@@ -26,10 +26,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 2. ValidateToken 으로 토큰 유효성 검사
         if (token != null && jwtProvider.validateToken(token)) {
-            String email = jwtProvider.parseClaims(token).getSubject();
+            String loginId = jwtProvider.parseClaims(token).getSubject();
 
             // 이메일로 UserDetails 조회
-            UserDetails userDetails = userDetailService.loadUserByUsername(email);
+            UserDetails userDetails = userDetailService.loadUserByUsername(loginId);
 
             // 인증 객체 생성
             Authentication authentication = jwtProvider.getAuthentication(userDetails);
