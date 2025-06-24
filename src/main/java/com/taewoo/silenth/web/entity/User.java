@@ -36,7 +36,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     private String password;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private String nickname;
 
     private LocalDateTime deletedAt;
 
@@ -47,16 +47,16 @@ public class User extends BaseTimeEntity implements UserDetails {
     private Role role;
 
     @Builder
-    public User(String email, String password, String username, Role role) {
+    public User(String email, String password, String nickname, Role role) {
         this.email = email;
         this.password = password;
-        this.username = username;
+        this.nickname = nickname;
         this.role = role;
         this.profileImageUrl = "default_image_url";
     }
 
-    public void updateUsername(String newUsername) {
-        this.username = newUsername;
+    public void updateNickname(String newNickname) {
+        this.nickname = newNickname;
     }
 
     public void updateProfilePicture(String profileImageUrl) {
