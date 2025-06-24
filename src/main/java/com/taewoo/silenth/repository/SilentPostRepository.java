@@ -19,5 +19,5 @@ public interface SilentPostRepository extends JpaRepository<SilentPost, Long> {
     int countEchosByPostId(@Param("postId") Long postId);
 
     // 아직 아카이빙 되지 않은 게시글 조회 (특정 시간 이전)
-    List<SilentPost> findByArchivedFalseAndCreatedAtBefore(LocalDateTime threshold);
+    List<SilentPost> findByArchivedFalseAndConsentToArchiveTrueAndCreatedAtBefore(LocalDateTime threshold);
 }

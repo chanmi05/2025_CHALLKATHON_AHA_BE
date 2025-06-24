@@ -42,6 +42,13 @@ public class SilentPost {
     @OneToMany(mappedBy = "silentPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Echo> echos = new ArrayList<>();
 
+    @Column(nullable = false)
+    private boolean consentToArchive = false;
+
+    public void giveConsent() {
+        this.consentToArchive = true;
+    }
+
     public int getEchoCount() {
         return this.echos.size();
     }
@@ -57,4 +64,5 @@ public class SilentPost {
     public void archive() {
         this.archived = true;
     }
+
 }

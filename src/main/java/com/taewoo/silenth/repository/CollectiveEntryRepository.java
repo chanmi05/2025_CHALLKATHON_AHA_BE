@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CollectiveEntryRepository extends JpaRepository<CollectiveEntry, Long> {
     Page<CollectiveEntry> findByEraYear(int year, Pageable pageable);
+    Page<CollectiveEntry> findByEraYearAndEraMonthOrderByOriginalCreatedAtDesc(int year, int month, Pageable pageable);
 }

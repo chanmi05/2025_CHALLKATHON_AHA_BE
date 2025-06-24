@@ -28,7 +28,7 @@ public class ArchivingService {
     public void archiveOldPosts() {
         // 7일 이전의 기록부터 아카이빙 대상으로 선정
         LocalDateTime threshold = LocalDateTime.now().minusDays(7);
-        List<SilentPost> postsToArchive = silentPostRepository.findByArchivedFalseAndCreatedAtBefore(threshold);
+        List<SilentPost> postsToArchive = silentPostRepository.findByArchivedFalseAndConsentToArchiveTrueAndCreatedAtBefore(threshold);
 
         if (postsToArchive.isEmpty()) {
             // ErrorCode 사용보다는 log 사용이 맞음

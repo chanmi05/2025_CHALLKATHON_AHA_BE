@@ -1,6 +1,7 @@
 package com.taewoo.silenth.controller;
 
 import com.taewoo.silenth.service.ArchivingService;
+import com.taewoo.silenth.service.CollectiveEntryService;
 import com.taewoo.silenth.web.dto.CollectiveEntryResponse;
 import com.taewoo.silenth.web.dto.commonResponse.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +20,9 @@ import org.springframework.web.bind.annotation.*;
 public class CollectiveEntryController {
 
     private final ArchivingService archivingService;
+    private final CollectiveEntryService collectiveEntryService;
 
+    /*
     @GetMapping
     @Operation(summary = "아카이빙된 기록 조회", description = "특정 연도의 아카이빙된 기록들을 조회합니다.")
     public ResponseEntity<ApiResponse<Page<CollectiveEntryResponse>>> getArchivedPosts(
@@ -27,5 +31,18 @@ public class CollectiveEntryController {
     ) {
         Page<CollectiveEntryResponse> response = archivingService.getArchivedPostsByYear(year, pageable);
         return ResponseEntity.ok(ApiResponse.onSuccessWithData(response));
+    }
+
+     */
+
+    @GetMapping
+    @Operation(summary = "공감 연대기 기록 조회", description = "특정 연도와 월의 아카이빙된 기록들을 최신순으로 조회")
+    public ResponseEntity<ApiResponse<Page<CollectiveEntryResponse>>> getTimeline(
+            @RequestParam int year,
+            @RequestParam int month,
+            @PageableDefault(size = 20) Pageable pageable
+    ) {
+        Page<CollectiveEntryResponse> timelinePage = collectiveEntryService.getTimeline(year, month, pageable);
+        return ResponseEntity.ok(ApiResponse.onSuccessWithData(timelinePage));
     }
 }

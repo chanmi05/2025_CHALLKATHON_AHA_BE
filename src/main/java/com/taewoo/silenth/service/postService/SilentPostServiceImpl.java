@@ -62,4 +62,17 @@ public class SilentPostServiceImpl implements SilentPostService {
     public Page<PostResponse> getPostFeed(Pageable pageable) {
         return silentPostRepository.findPostWithUser(pageable).map(PostResponse::from);
     }
+
+    @Override
+    @Transactional
+    public void giveArchivingConsent(Long userId, Long postId) {
+        SilentPost post = silentPostRepository.findById(postId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+
+        if (!post.getUser().getId().equals(userId)) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED_POST_ACCESS);
+        }
+
+        post.giveConsent();
+    }
 }
