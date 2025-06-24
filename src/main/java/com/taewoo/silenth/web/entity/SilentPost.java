@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SilentPost {
+public class SilentPost extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +22,6 @@ public class SilentPost {
     private String content;
 
     private boolean archived = false;   // 아카이빙 여부
-
-    private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -44,6 +42,9 @@ public class SilentPost {
 
     @Column(nullable = false)
     private boolean consentToArchive = false;
+
+    @Column(nullable = false)
+    private boolean isAnonymous = true;
 
     public void giveConsent() {
         this.consentToArchive = true;
