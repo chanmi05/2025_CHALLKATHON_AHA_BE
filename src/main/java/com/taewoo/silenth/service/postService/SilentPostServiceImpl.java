@@ -1,13 +1,13 @@
-package com.taewoo.silenth.service;
+package com.taewoo.silenth.service.postService;
 
 import com.taewoo.silenth.common.ErrorCode;
 import com.taewoo.silenth.exception.BusinessException;
 import com.taewoo.silenth.repository.EmotionTagRepository;
 import com.taewoo.silenth.repository.SilentPostRepository;
 import com.taewoo.silenth.repository.UserRepository;
-import com.taewoo.silenth.web.dto.PostResponse;
-import com.taewoo.silenth.web.dto.SilentPostCreateRequest;
-import com.taewoo.silenth.web.dto.SilentPostCreateResponse;
+import com.taewoo.silenth.web.dto.postDto.PostResponse;
+import com.taewoo.silenth.web.dto.postDto.SilentPostCreateRequest;
+import com.taewoo.silenth.web.dto.postDto.SilentPostCreateResponse;
 import com.taewoo.silenth.web.entity.EmotionTag;
 import com.taewoo.silenth.web.entity.SilentPost;
 import com.taewoo.silenth.web.entity.User;

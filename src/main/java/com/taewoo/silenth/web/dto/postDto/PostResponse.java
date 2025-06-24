@@ -1,4 +1,4 @@
-package com.taewoo.silenth.web.dto;
+package com.taewoo.silenth.web.dto.postDto;
 
 import com.taewoo.silenth.web.entity.EmotionTag;
 import com.taewoo.silenth.web.entity.SilentPost;

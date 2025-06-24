@@ -4,7 +4,7 @@ import com.taewoo.silenth.common.ErrorCode;
 import com.taewoo.silenth.exception.BusinessException;
 import com.taewoo.silenth.repository.UserRepository;
 import com.taewoo.silenth.util.FileUploader;
-import com.taewoo.silenth.web.dto.MyPageResponse;
+import com.taewoo.silenth.web.dto.mypageDto.MyPageResponse;
 import com.taewoo.silenth.web.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
