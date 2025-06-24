@@ -20,4 +20,9 @@ public interface SilentPostRepository extends JpaRepository<SilentPost, Long> {
 
     // 아직 아카이빙 되지 않은 게시글 조회 (특정 시간 이전)
     List<SilentPost> findByArchivedFalseAndConsentToArchiveTrueAndCreatedAtBefore(LocalDateTime threshold);
+
+    @Query("select p from SilentPost p " +
+            "join fetch p.user u " +
+            "where u.id = :userId order by p.createdAt desc")
+    Page<SilentPost> findByUserIdWithUser(@Param("userId") Long userId, Pageable pageable);
 }

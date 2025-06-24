@@ -75,4 +75,11 @@ public class SilentPostServiceImpl implements SilentPostService {
 
         post.giveConsent();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PostResponse> getMyPosts(Long userId, Pageable pageable) {
+        return silentPostRepository.findByUserIdWithUser(userId, pageable)
+                .map(PostResponse::from);
+    }
 }
