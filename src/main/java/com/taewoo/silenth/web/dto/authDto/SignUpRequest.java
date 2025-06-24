@@ -11,6 +11,11 @@ public record SignUpRequest(
         @Email(message = "이메일 형식이 올바르지 않습니다.")
         String email,
 
+        @NotBlank(message = "아이디는 필수입니다.")
+        @Size(min = 4, max = 20, message = "아이디는 4글자 이상, 20글자 이하로 입력해주세요.")
+        @Pattern(regexp = "^[a-z0-9]+$", message = "아이디는 영문 소문자와 숫자만 사용할 수 있습니다.")
+        String loginId,
+
         @Schema(description = "비밀번호 (영문, 숫자 포함 8~20자)", example = "password123")
         @NotBlank(message = "비밀번호는 필수입니다.")
         @Size(min = 8, max = 20, message = "비밀번호는 8자 이상, 20자 이하로 입력해주세요.")
