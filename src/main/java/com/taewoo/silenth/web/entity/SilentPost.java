@@ -39,6 +39,13 @@ public class SilentPost {
     )
     private List<EmotionTag> emotionTags = new ArrayList<>();
 
+    @OneToMany(mappedBy = "silentPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Echo> echos = new ArrayList<>();
+
+    public int getEchoCount() {
+        return this.echos.size();
+    }
+
     public void setUser(User user) {
         this.user = user;
     }

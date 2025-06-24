@@ -5,14 +5,17 @@ import com.taewoo.silenth.exception.BusinessException;
 import com.taewoo.silenth.repository.EmotionTagRepository;
 import com.taewoo.silenth.repository.SilentPostRepository;
 import com.taewoo.silenth.repository.UserRepository;
+import com.taewoo.silenth.web.dto.PostResponse;
 import com.taewoo.silenth.web.dto.SilentPostCreateRequest;
 import com.taewoo.silenth.web.dto.SilentPostCreateResponse;
 import com.taewoo.silenth.web.entity.EmotionTag;
 import com.taewoo.silenth.web.entity.SilentPost;
 import com.taewoo.silenth.web.entity.User;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,8 +27,8 @@ public class SilentPostServiceImpl implements SilentPostService {
     private final SilentPostRepository silentPostRepository;
     private final EmotionTagRepository emotionTagRepository;
 
-    @Transactional
     @Override
+    @Transactional
     public SilentPostCreateResponse createPost(Long userId, SilentPostCreateRequest request) {
         // 1. 사용자 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
@@ -52,5 +55,11 @@ public class SilentPostServiceImpl implements SilentPostService {
 
         // 5. response 변환
         return new SilentPostCreateResponse(saved.getId(), "작성 완료!");
+    }
+
+    @Override
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public Page<PostResponse> getPostFeed(Pageable pageable) {
+        return silentPostRepository.findPostWithUser(pageable).map(PostResponse::from);
     }
 }
