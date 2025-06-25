@@ -38,6 +38,9 @@ public class User extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false, unique = true, length = 20)
     private String nickname;
 
+    @Column(nullable = false, unique = true)
+    private String username;
+
     @Column(nullable = false, unique = true, length = 20)
     private String loginId;
 
@@ -55,6 +58,7 @@ public class User extends BaseTimeEntity implements UserDetails {
         this.loginId = loginId;
         this.password = password;
         this.nickname = nickname;
+        this.username = loginId;
         this.role = role;
         this.profileImageUrl = "default_image_url";
     }
