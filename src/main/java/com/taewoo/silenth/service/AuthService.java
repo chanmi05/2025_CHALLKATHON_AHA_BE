@@ -2,13 +2,14 @@ package com.taewoo.silenth.service;
 
 import com.taewoo.silenth.common.ErrorCode;
 import com.taewoo.silenth.common.Role;
+import com.taewoo.silenth.config.UserPrincipal;
 import com.taewoo.silenth.config.jwt.JwtProvider;
 import com.taewoo.silenth.exception.BusinessException;
 import com.taewoo.silenth.repository.RefreshTokenRepository;
 import com.taewoo.silenth.repository.UserRepository;
-import com.taewoo.silenth.web.dto.LoginRequest;
-import com.taewoo.silenth.web.dto.SignUpRequest;
-import com.taewoo.silenth.web.dto.TokenResponse;
+import com.taewoo.silenth.web.dto.authDto.LoginRequest;
+import com.taewoo.silenth.web.dto.authDto.SignUpRequest;
+import com.taewoo.silenth.web.dto.authDto.TokenResponse;
 import com.taewoo.silenth.web.entity.RefreshToken;
 import com.taewoo.silenth.web.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,9 @@ public class AuthService {
         if (userRepository.existsByEmail(req.email())) {
             throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
+        if (userRepository.existsByLoginId(req.loginId())) {
+            throw new BusinessException(ErrorCode.LOGINID_ALREADY_EXISTS);
+        }
         if (userRepository.existsByNickname(req.nickname())) {
             throw new BusinessException(ErrorCode.NICKNAME_ALREADY_EXISTS);
         }
@@ -41,6 +45,7 @@ public class AuthService {
         User user = User.builder()
                 .email(req.email())
                 .password(passwordEncoder.encode(req.password()))
+                .loginId(req.loginId())
                 .nickname(req.nickname())
                 .role(Role.USER)
                 .build();
@@ -51,14 +56,15 @@ public class AuthService {
     public TokenResponse login(LoginRequest req) {
         // AuthenticationManager를 통해 인증
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.email(), req.password())
+                new UsernamePasswordAuthenticationToken(req.loginId(), req.password())
         );
 
         // 인증 -> JWT 토큰 생성
         TokenResponse tokenResponse = jwtProvider.generateToken(authentication);
 
         // Refresh Token DB에 저장
-        User user = (User) authentication.getPrincipal();
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        User user = userPrincipal.getUser();
         refreshTokenRepository.findByUserId(user.getId())
                 .ifPresentOrElse(
                         refreshToken -> refreshToken.updateToken(tokenResponse.refreshToken()),

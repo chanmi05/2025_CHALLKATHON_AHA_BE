@@ -1,6 +1,5 @@
-package com.taewoo.silenth.web.dto;
+package com.taewoo.silenth.web.dto.postDto;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
@@ -19,4 +18,6 @@ public class SilentPostCreateRequest {
 
     @NotEmpty(message = "감정 태그는 1개 이상 입력되어야 합니다.")
     private List<Long> emotionTagIds;
+
+    private Boolean isAnonymous;
 }

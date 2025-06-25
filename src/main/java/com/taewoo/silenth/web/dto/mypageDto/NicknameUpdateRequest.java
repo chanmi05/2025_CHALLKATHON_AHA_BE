@@ -1,4 +1,4 @@
-package com.taewoo.silenth.web.dto;
+package com.taewoo.silenth.web.dto.mypageDto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

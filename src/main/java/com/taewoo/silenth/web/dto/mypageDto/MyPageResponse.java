@@ -1,4 +1,4 @@
-package com.taewoo.silenth.web.dto;
+package com.taewoo.silenth.web.dto.mypageDto;
 
 import com.taewoo.silenth.web.entity.User;
 import lombok.Getter;

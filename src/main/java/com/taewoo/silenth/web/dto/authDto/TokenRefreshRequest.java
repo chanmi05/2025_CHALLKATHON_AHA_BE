@@ -1,4 +1,4 @@
-package com.taewoo.silenth.web.dto;
+package com.taewoo.silenth.web.dto.authDto;
 
 import jakarta.validation.constraints.NotBlank;
 

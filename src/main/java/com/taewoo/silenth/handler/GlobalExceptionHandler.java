@@ -2,12 +2,10 @@ package com.taewoo.silenth.handler;
 
 import com.taewoo.silenth.common.ErrorCode;
 import com.taewoo.silenth.exception.BusinessException;
-import com.taewoo.silenth.web.dto.ApiResponse;
-import jakarta.validation.Valid;
+import com.taewoo.silenth.web.dto.commonResponse.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.taewoo.silenth.web.dto.ErrorResponse;
+import com.taewoo.silenth.web.dto.commonResponse.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
