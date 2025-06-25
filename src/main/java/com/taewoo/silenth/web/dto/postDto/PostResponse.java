@@ -14,21 +14,25 @@ public record PostResponse(
         String authorProfileImageUrl,
         int echoCount,
         LocalDateTime createdAt,
-        List<String> tags
+        List<String> tags,
+        boolean isAnonymous
 ) {
     public static PostResponse from(SilentPost post) {
+        String nickname = post.isAnonymous() ? "익명의 감정" : post.getUser().getNickname();
+        String profileImg = post.isAnonymous() ? "기본 익명_프로필_이미지_URL" : post.getUser().getProfileImageUrl();
         return new PostResponse(
                 post.getId(),
                 post.getContent(),
-                post.getUser().getNickname(),
-                post.getUser().getProfileImageUrl(),
+                nickname,
+                profileImg,
                 post.getEchoCount(),
                 post.getCreatedAt(),
                 post.getEmotionTags().stream()
-//                        .map(EmotionTag::getTagName)
                         .map(tag -> tag.getEmotionTag().getTagName())
-//                        .collect(Collectors.toList())
-                        .toList()
+                        .collect(Collectors.toList()),
+                post.isAnonymous()
+//                        .map(EmotionTag::getTagName)
+//                        .toList()
         );
     }
 }

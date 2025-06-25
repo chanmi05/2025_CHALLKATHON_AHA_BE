@@ -35,6 +35,9 @@ public class AuthService {
         if (userRepository.existsByEmail(req.email())) {
             throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
+        if (userRepository.existsByLoginId(req.loginId())) {
+            throw new BusinessException(ErrorCode.LOGINID_ALREADY_EXISTS);
+        }
         if (userRepository.existsByNickname(req.nickname())) {
             throw new BusinessException(ErrorCode.NICKNAME_ALREADY_EXISTS);
         }
@@ -42,6 +45,7 @@ public class AuthService {
         User user = User.builder()
                 .email(req.email())
                 .password(passwordEncoder.encode(req.password()))
+                .loginId(req.loginId())
                 .nickname(req.nickname())
                 .role(Role.USER)
                 .build();
@@ -52,7 +56,7 @@ public class AuthService {
     public TokenResponse login(LoginRequest req) {
         // AuthenticationManager를 통해 인증
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.email(), req.password())
+                new UsernamePasswordAuthenticationToken(req.loginId(), req.password())
         );
 
         // 인증 -> JWT 토큰 생성

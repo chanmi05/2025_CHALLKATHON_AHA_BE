@@ -80,6 +80,10 @@ public class SilentPostServiceImpl implements SilentPostService {
         }
 
         // 5. 저장
+        if (request.getIsAnonymous() != null) {
+            post.setAnonymous(request.getIsAnonymous());
+        }
+
         SilentPost saved = silentPostRepository.save(post);
 
         // 5. response 변환
@@ -103,5 +107,12 @@ public class SilentPostServiceImpl implements SilentPostService {
         }
 
         post.giveConsent();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PostResponse> getMyPosts(Long userId, Pageable pageable) {
+        return silentPostRepository.findByUserIdWithUser(userId, pageable)
+                .map(PostResponse::from);
     }
 }

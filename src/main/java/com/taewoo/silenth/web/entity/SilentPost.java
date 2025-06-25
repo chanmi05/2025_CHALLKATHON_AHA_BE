@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SilentPost {
+public class SilentPost extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +49,9 @@ public class SilentPost {
 
     @Column(nullable = false)
     private boolean consentToArchive = false;
+
+    @Column(nullable = false)
+    private boolean isAnonymous = true;
 
     public void giveConsent() {
         this.consentToArchive = true;
