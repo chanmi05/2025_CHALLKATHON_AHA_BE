@@ -1,4 +1,4 @@
-package com.taewoo.silenth.service;
+package com.taewoo.silenth.service.auth;
 
 import com.taewoo.silenth.common.ErrorCode;
 import com.taewoo.silenth.common.Role;
@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,9 +56,14 @@ public class AuthService {
 
     public TokenResponse login(LoginRequest req) {
         // AuthenticationManager를 통해 인증
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.loginId(), req.password())
-        );
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(req.loginId(), req.password())
+            );
+        } catch (AuthenticationException e) {
+            throw new BusinessException(ErrorCode.LOGIN_FAILED);
+        }
 
         // 인증 -> JWT 토큰 생성
         TokenResponse tokenResponse = jwtProvider.generateToken(authentication);

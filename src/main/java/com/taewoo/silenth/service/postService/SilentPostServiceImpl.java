@@ -1,7 +1,9 @@
 package com.taewoo.silenth.service.postService;
 
 import com.taewoo.silenth.common.ErrorCode;
+import com.taewoo.silenth.converter.SilentPostConverter;
 import com.taewoo.silenth.exception.BusinessException;
+import com.taewoo.silenth.external.gemini.GeminiClient;
 import com.taewoo.silenth.repository.EmotionTagRepository;
 import com.taewoo.silenth.repository.SilentPostRepository;
 import com.taewoo.silenth.repository.UserRepository;
@@ -10,6 +12,7 @@ import com.taewoo.silenth.web.dto.postDto.SilentPostCreateRequest;
 import com.taewoo.silenth.web.dto.postDto.SilentPostCreateResponse;
 import com.taewoo.silenth.web.entity.EmotionTag;
 import com.taewoo.silenth.web.entity.SilentPost;
+import com.taewoo.silenth.web.entity.SilentPostEmotionTag;
 import com.taewoo.silenth.web.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +30,23 @@ public class SilentPostServiceImpl implements SilentPostService {
     private final UserRepository userRepository;
     private final SilentPostRepository silentPostRepository;
     private final EmotionTagRepository emotionTagRepository;
+
+    private final GeminiClient geminiClient;
+
+    @Override
+    // emotionTags로 EmotionTag 엔티티 만들고 저장/매핑
+    public List<EmotionTag> analyzeAndCreateTags(String content){
+        // 1. Gemini로 감정 태그 분석 요청
+        List<String> emotionTags = geminiClient.getEmotionTags(content);
+        // 2. emotionTags로 EmotionTag 엔티티 생성 or 재사용
+        List<EmotionTag> tags = new ArrayList<>();
+        for(String emotionTag : emotionTags){
+           EmotionTag tag = emotionTagRepository.findByTagName(emotionTag)
+                   .orElseGet(() -> emotionTagRepository.save(new EmotionTag(emotionTag)));
+           tags.add(tag);
+        }
+        return tags;
+    }
 
     @Override
     @Transactional
@@ -45,12 +66,29 @@ public class SilentPostServiceImpl implements SilentPostService {
             throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
         }
 
+
+//        List<EmotionTag> emotionTags = new java.util.ArrayList<>();
+//        if (request.getEmotionTagIds() != null && !request.getEmotionTagIds().isEmpty()){
+//            emotionTags = emotionTagRepository.findByIdIn(request.getEmotionTagIds());
+//            if (emotionTags.size() != request.getEmotionTagIds().size()) {
+//                throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
+//            }
+//        }
+
         // 4. 게시글 생성 및 연관관계 설정
         SilentPost post = new SilentPost();
         post.setUser(user);
-        post.setEmotionTags(emotionTags);
         post.setContent(request.getContent());
 
+        // 새로운 방식 : 중간 엔티티 직접 생성
+        for(EmotionTag tag : emotionTags){
+            SilentPostEmotionTag link = new SilentPostEmotionTag();
+            link.setSilentPost(post);
+            link.setEmotionTag(tag);
+            post.addEmotionTag(link);
+        }
+
+        // 5. 저장
         if (request.getIsAnonymous() != null) {
             post.setAnonymous(request.getIsAnonymous());
         }
@@ -58,7 +96,7 @@ public class SilentPostServiceImpl implements SilentPostService {
         SilentPost saved = silentPostRepository.save(post);
 
         // 5. response 변환
-        return new SilentPostCreateResponse(saved.getId(), "작성 완료!");
+        return SilentPostConverter.toCreateResponse(saved);
     }
 
     @Override
