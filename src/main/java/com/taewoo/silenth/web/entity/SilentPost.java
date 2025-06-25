@@ -19,25 +19,30 @@ public class SilentPost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String content;
 
     private boolean archived = false;   // 아카이빙 여부
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    // 사용자와 연관관계
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     // EmotionTag 연관관계 (N:M → 중간 테이블 필요. 일단 무시하거나 추후 매핑)
     // 추후: @ManyToMany or 중간 엔티티로 구현
-    @ManyToMany
-    @JoinTable(
-            name = "silent_post_emotion_tag",
-            joinColumns = @JoinColumn(name = "silent_post_id"),
-            inverseJoinColumns = @JoinColumn(name = "emotion_tag_id")
-    )
-    private List<EmotionTag> emotionTags = new ArrayList<>();
+//    @ManyToMany
+//    @JoinTable(
+//            name = "silent_post_emotion_tag",
+//            joinColumns = @JoinColumn(name = "silent_post_id"),
+//            inverseJoinColumns = @JoinColumn(name = "emotion_tag_id")
+//    )
+//    private List<EmotionTag> emotionTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "silentPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SilentPostEmotionTag> emotionTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "silentPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Echo> echos = new ArrayList<>();
@@ -57,10 +62,20 @@ public class SilentPost {
         this.user = user;
     }
 
-    public void setEmotionTags(List<EmotionTag> tags) {
-        this.emotionTags = tags;
+    public void addEmotionTag(SilentPostEmotionTag tag){
+        this.emotionTags.add(tag);
+        tag.setSilentPost(this);
     }
 
+    public void clearEmotionTags() {
+        for (SilentPostEmotionTag tag : emotionTags){
+            tag.setSilentPost(null);
+        }
+        emotionTags.clear();
+    }
+//    public void setEmotionTags(List<EmotionTag> tags) {
+//        this.emotionTags = tags;
+//    }
     public void archive() {
         this.archived = true;
     }
