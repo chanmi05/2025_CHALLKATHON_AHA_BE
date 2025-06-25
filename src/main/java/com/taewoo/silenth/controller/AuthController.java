@@ -1,6 +1,6 @@
 package com.taewoo.silenth.controller;
 
-import com.taewoo.silenth.service.AuthService;
+import com.taewoo.silenth.service.auth.AuthService;
 import com.taewoo.silenth.web.dto.authDto.LoginRequest;
 import com.taewoo.silenth.web.dto.authDto.SignUpRequest;
 import com.taewoo.silenth.web.dto.authDto.TokenRefreshRequest;

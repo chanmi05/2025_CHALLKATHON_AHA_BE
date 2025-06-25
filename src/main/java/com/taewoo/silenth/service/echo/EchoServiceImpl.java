@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class EchoServiceImpl implements EchoService {
@@ -26,17 +28,19 @@ public class EchoServiceImpl implements EchoService {
     public EchoResponse toggleEcho(Long userId, Long postId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        SilentPost silentPost = silentPostRepository.findById(postId)
+        SilentPost silentPost = silentPostRepository.findByIdWithEchos(postId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+        Optional<Echo> existingEcho = silentPost.getEchos().stream()
+                .filter(e -> e.getUser().getId().equals(userId))
+                .findFirst();
 
-        return echoRepository.findByUserAndSilentPost(user, silentPost)
-                .map(echo -> {
-                    echoRepository.delete(echo);
-                    return new EchoResponse(silentPostRepository.countEchosByPostId(postId) - 1, false);
-                })
-                .orElseGet(() -> {
-                    echoRepository.save(Echo.builder().user(user).silentPost(silentPost).build());
-                    return new EchoResponse(silentPostRepository.countEchosByPostId(postId) + 1, true );
-                });
+        if (existingEcho.isPresent()) {
+            silentPost.getEchos().remove(existingEcho.get());
+            return new EchoResponse(silentPost.getEchoCount(), false);
+        } else {
+            Echo newEcho = Echo.builder().user(user).silentPost(silentPost).build();
+            silentPost.getEchos().add(newEcho);
+            return new EchoResponse(silentPost.getEchoCount(), true);
+        }
     }
 }

@@ -54,16 +54,28 @@ public class SilentPostServiceImpl implements SilentPostService {
         // 1. 사용자 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
+        /*
         // 2. 감정 태그 유효성 검사
         if (request.getEmotionTagIds() == null || request.getEmotionTagIds().isEmpty()){
             throw new BusinessException(ErrorCode.EMPTY_EMOTION_TAGS);
         }
 
+         */
+
         // 3. 감정 태그 조회
+        /*
         List<EmotionTag> emotionTags =  emotionTagRepository.findByIdIn(request.getEmotionTagIds());
 
         if(emotionTags.size() != request.getEmotionTagIds().size()){
             throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
+        }
+         */
+        List<EmotionTag> emotionTags = new java.util.ArrayList<>();
+        if (request.getEmotionTagIds() != null && !request.getEmotionTagIds().isEmpty()){
+            emotionTags = emotionTagRepository.findByIdIn(request.getEmotionTagIds());
+            if (emotionTags.size() != request.getEmotionTagIds().size()) {
+                throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
+            }
         }
 
         // 4. 게시글 생성 및 연관관계 설정
