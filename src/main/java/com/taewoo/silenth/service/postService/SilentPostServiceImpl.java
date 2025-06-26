@@ -22,28 +22,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true) // 클래스 레벨에 readOnly 추가
 public class SilentPostServiceImpl implements SilentPostService {
 
     private final UserRepository userRepository;
     private final SilentPostRepository silentPostRepository;
     private final EmotionTagRepository emotionTagRepository;
-
     private final GeminiClient geminiClient;
 
     @Override
-    // emotionTags로 EmotionTag 엔티티 만들고 저장/매핑
+    @Transactional
     public List<EmotionTag> analyzeAndCreateTags(String content){
-        // 1. Gemini로 감정 태그 분석 요청
+        // ... (기존 로직 유지)
         List<String> emotionTags = geminiClient.getEmotionTags(content);
-        // 2. emotionTags로 EmotionTag 엔티티 생성 or 재사용
         List<EmotionTag> tags = new ArrayList<>();
         for(String emotionTag : emotionTags){
-           EmotionTag tag = emotionTagRepository.findByTagName(emotionTag)
-                   .orElseGet(() -> emotionTagRepository.save(new EmotionTag(emotionTag)));
-           tags.add(tag);
+            EmotionTag tag = emotionTagRepository.findByTagName(emotionTag)
+                    .orElseGet(() -> emotionTagRepository.save(new EmotionTag(emotionTag)));
+            tags.add(tag);
         }
         return tags;
     }
@@ -51,56 +51,31 @@ public class SilentPostServiceImpl implements SilentPostService {
     @Override
     @Transactional
     public SilentPostCreateResponse createPost(Long userId, SilentPostCreateRequest request) {
-        // 1. 사용자 확인
+        // ... (기존 로직 유지)
         User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-
-        // 2. 감정 태그 유효성 검사
         if (request.getEmotionTagIds() == null || request.getEmotionTagIds().isEmpty()){
             throw new BusinessException(ErrorCode.EMPTY_EMOTION_TAGS);
         }
-
-        // 3. 감정 태그 조회
         List<EmotionTag> emotionTags =  emotionTagRepository.findByIdIn(request.getEmotionTagIds());
-
         if(emotionTags.size() != request.getEmotionTagIds().size()){
             throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
         }
-
-
-//        List<EmotionTag> emotionTags = new java.util.ArrayList<>();
-//        if (request.getEmotionTagIds() != null && !request.getEmotionTagIds().isEmpty()){
-//            emotionTags = emotionTagRepository.findByIdIn(request.getEmotionTagIds());
-//            if (emotionTags.size() != request.getEmotionTagIds().size()) {
-//                throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
-//            }
-//        }
-
-        // 4. 게시글 생성 및 연관관계 설정
         SilentPost post = new SilentPost();
         post.setUser(user);
         post.setContent(request.getContent());
-
-        // 새로운 방식 : 중간 엔티티 직접 생성
         for(EmotionTag tag : emotionTags){
             SilentPostEmotionTag link = new SilentPostEmotionTag();
             link.setSilentPost(post);
             link.setEmotionTag(tag);
             post.addEmotionTag(link);
         }
-
-        // 5. 저장
-        if (request.getIsAnonymous() != null) {
-            post.setAnonymous(request.getIsAnonymous());
-        }
-
+        boolean isAnonymous = request.getIsAnonymous() != null ? request.getIsAnonymous() : false;
+        post.setAnonymous(isAnonymous);
         SilentPost saved = silentPostRepository.save(post);
-
-        // 5. response 변환
         return SilentPostConverter.toCreateResponse(saved);
     }
 
     @Override
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public Page<PostResponse> getPostFeed(Pageable pageable) {
         return silentPostRepository.findPostWithUser(pageable).map(PostResponse::from);
     }
@@ -108,6 +83,7 @@ public class SilentPostServiceImpl implements SilentPostService {
     @Override
     @Transactional
     public void giveArchivingConsent(Long userId, Long postId) {
+        // ... (기존 로직 유지)
         SilentPost post = silentPostRepository.findById(postId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 
@@ -119,9 +95,17 @@ public class SilentPostServiceImpl implements SilentPostService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Page<PostResponse> getMyPosts(Long userId, Pageable pageable) {
         return silentPostRepository.findByUserIdWithUser(userId, pageable)
                 .map(PostResponse::from);
+    }
+
+    // 👇 아래 메서드를 구현합니다.
+    @Override
+    public List<PostResponse> getPostsByTagName(String tagName) {
+        List<SilentPost> posts = silentPostRepository.findByEmotionTagName(tagName);
+        return posts.stream()
+                .map(PostResponse::from)
+                .collect(Collectors.toList());
     }
 }

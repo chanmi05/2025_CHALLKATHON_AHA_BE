@@ -1,6 +1,5 @@
 package com.taewoo.silenth.repository;
 
-import aj.org.objectweb.asm.commons.Remapper;
 import com.taewoo.silenth.web.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
