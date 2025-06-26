@@ -85,8 +85,6 @@ public class SilentPostServiceImpl implements SilentPostService {
         SilentPost post = new SilentPost();
         post.setUser(user);
         post.setContent(request.getContent());
-
-        // 새로운 방식 : 중간 엔티티 직접 생성
         for(EmotionTag tag : emotionTags){
             SilentPostEmotionTag link = new SilentPostEmotionTag();
             link.setSilentPost(post);
