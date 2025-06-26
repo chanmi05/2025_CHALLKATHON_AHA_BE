@@ -22,11 +22,10 @@ public class EmotionAnalysisService {
     @Transactional
     public List<EmotionTagResponse> analyze(String content) {
         String prompt = """
-                다음 텍스트에서 느껴지는 감정을 간결한 키워드 3~5개로 추출해줘.
-                감정 예시 : 슬픔, 기쁨, 피곤함, 안정감, 두려움, 기대감 등등
+                다음 텍스트에서 느껴지는 감정을 3~5개의 간결한 키워드로 쉼표로 구분해 출력해줘.
+                예시 : 슬픔, 기쁨, 피곤함, 안정감, 기대감
                 
                 텍스트 : "%s"
-                감정 키워드:
                 """.formatted(content);
 
         List<String> tagNames = geminiClient.getEmotionTags(prompt);

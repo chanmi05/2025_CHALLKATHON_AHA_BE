@@ -15,9 +15,6 @@ public class EmotionTag {
 
     private String tagName;
 
-    // 시각화를 위한 감정 색상
-    private String colorHex;
-
     public EmotionTag(String tagName){
         this.tagName = tagName;
     }

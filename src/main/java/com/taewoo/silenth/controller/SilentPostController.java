@@ -48,11 +48,14 @@ public class SilentPostController {
             @RequestBody @Valid SilentPostCreateRequest request,
             @AuthenticationPrincipal UserPrincipal userPrincipal
             ) {
-        log.info("요청 본문: {}", request);
-
-        User loginUser = userPrincipal.getUser();
-        SilentPostCreateResponse response = silentPostService.createPost(loginUser.getId(), request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(com.taewoo.silenth.web.dto.commonResponse.ApiResponse.onSuccessWithData(response));
+        try {
+            User loginUser = userPrincipal.getUser();
+            SilentPostCreateResponse response = silentPostService.createPost(loginUser.getId(), request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(com.taewoo.silenth.web.dto.commonResponse.ApiResponse.onSuccessWithData(response));
+        }catch(Exception e){
+            log.error("게시글 생성 중 예외 발생", e);
+            throw e;
+        }
     }
 
     @GetMapping

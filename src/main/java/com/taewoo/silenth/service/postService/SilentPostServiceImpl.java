@@ -15,16 +15,19 @@ import com.taewoo.silenth.web.entity.SilentPost;
 import com.taewoo.silenth.web.entity.SilentPostEmotionTag;
 import com.taewoo.silenth.web.entity.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SilentPostServiceImpl implements SilentPostService {
 
     private final UserRepository userRepository;
@@ -51,6 +54,9 @@ public class SilentPostServiceImpl implements SilentPostService {
     @Override
     @Transactional
     public SilentPostCreateResponse createPost(Long userId, SilentPostCreateRequest request) {
+
+        log.info("📝 createPost called by userId={}, content={}", userId, request.getContent());
+
         // 1. 사용자 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
@@ -94,6 +100,7 @@ public class SilentPostServiceImpl implements SilentPostService {
         }
 
         SilentPost saved = silentPostRepository.save(post);
+        log.info("저장된 post ID: {}", saved.getId());
 
         // 5. response 변환
         return SilentPostConverter.toCreateResponse(saved);
