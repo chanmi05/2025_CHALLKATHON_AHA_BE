@@ -28,9 +28,11 @@ public record PostResponse(
                 post.getEchoCount(),
                 post.getCreatedAt(),
                 post.getEmotionTags().stream()
-                        .map(EmotionTag::getTagName)
+                        .map(tag -> tag.getEmotionTag().getTagName())
                         .collect(Collectors.toList()),
                 post.isAnonymous()
+//                        .map(EmotionTag::getTagName)
+//                        .toList()
         );
     }
 }

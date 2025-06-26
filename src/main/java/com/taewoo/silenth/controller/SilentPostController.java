@@ -13,7 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import java.util.List;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,7 +47,7 @@ public class SilentPostController {
     public ResponseEntity<com.taewoo.silenth.web.dto.commonResponse.ApiResponse<SilentPostCreateResponse>> createPost(
             @RequestBody @Valid SilentPostCreateRequest request,
             @AuthenticationPrincipal UserPrincipal userPrincipal
-            ) {
+    ) {
         log.info("요청 본문: {}", request);
 
         User loginUser = userPrincipal.getUser();
@@ -71,5 +71,12 @@ public class SilentPostController {
         User loginUser = userPrincipal.getUser();
         silentPostService.giveArchivingConsent(loginUser.getId(), postId);
         return ResponseEntity.ok(com.taewoo.silenth.web.dto.commonResponse.ApiResponse.onSuccessWithMessage("아카이빙에 동의 처리되었습니다."));
+    }
+
+    @Operation(summary = "태그별 감정 기록 조회", description = "특정 감정 태그를 가진 기록들을 최신순으로 조회")
+    @GetMapping("/tags/{tagName}")
+    public ResponseEntity<com.taewoo.silenth.web.dto.commonResponse.ApiResponse<List<PostResponse>>> getPostsByTag(@PathVariable String tagName) {
+        List<PostResponse> posts = silentPostService.getPostsByTagName(tagName);
+        return ResponseEntity.ok(com.taewoo.silenth.web.dto.commonResponse.ApiResponse.onSuccessWithData(posts));
     }
 }

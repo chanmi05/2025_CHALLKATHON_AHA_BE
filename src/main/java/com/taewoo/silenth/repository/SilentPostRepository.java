@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface SilentPostRepository extends JpaRepository<SilentPost, Long> {
     // N + 1 문제 방지용 쿼리
@@ -25,4 +26,11 @@ public interface SilentPostRepository extends JpaRepository<SilentPost, Long> {
             "join fetch p.user u " +
             "where u.id = :userId order by p.createdAt desc")
     Page<SilentPost> findByUserIdWithUser(@Param("userId") Long userId, Pageable pageable);
+
+    @Query("select p from SilentPost p left join fetch p.echos where p.id = :postId")
+    Optional<SilentPost> findByIdWithEchos(@Param("postId") Long postId);
+
+    // 👇 아래 쿼리 메서드를 추가합니다.
+    @Query("SELECT p FROM SilentPost p JOIN p.emotionTags et JOIN et.emotionTag t WHERE t.tagName = :tagName ORDER BY p.createdAt DESC")
+    List<SilentPost> findByEmotionTagName(@Param("tagName") String tagName);
 }
